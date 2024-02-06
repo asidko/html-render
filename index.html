@@ -15,11 +15,12 @@
 
             // Extract 'content' parameter and decode it
             const base64Content = urlParams.get('content');
+            const contentElement = document.getElementById('content')
             if (base64Content) {
-                const decodedContent = atob(base64Content);
-                document.getElementById('content').innerText = decodedContent;
+                contentElement.innerHTML = base64DecodeUtf8(base64Content);
             } else {
-                document.getElementById('content').innerText = 'No content provided.';
+                const exampleUrl = `${window.location.origin}${window.location.pathname}?title=Custom%20title&content=Q3VzdG9tIDxiPmNvbnRlbnQ8L2I+`;
+                contentElement.innerHTML = 'No content provided. <a href="' + exampleUrl + '">Click here for an example.</a>';
             }
 
             // Extract 'title' parameter and set it as the page title
@@ -27,6 +28,18 @@
             if (pageTitle) {
                 document.title = decodeURIComponent(pageTitle);
             }
+        }
+
+        // Decode Base64 to a string correctly handling UTF-8 content
+        function base64DecodeUtf8(str) {
+            // Decode base64 to a byte array
+            const binaryString = window.atob(str);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            // Convert byte array to a UTF-8 string
+            return new TextDecoder().decode(bytes);
         }
 
         // Call the function when the page loads
