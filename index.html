@@ -8,42 +8,53 @@
 <body>
     <div id="content"></div>
     <script>
-        function getUrlParameters() {
-            // Get the query string from the URL
-            const queryString = window.location.search;
-            const urlParams = new URLSearchParams(queryString);
+// Parses URL parameters and updates the page accordingly.
+function updatePageContentFromUrlParameters() {
+    // Decode the 'content' parameter from hex to readable text and update the page content.
+    const contentParameter = getDecodedUrlParameter('content', true);
+    updatePageContent(contentParameter);
 
-            // Extract 'content' parameter and decode it
-            const base64Content = urlParams.get('content');
-            const contentElement = document.getElementById('content')
-            if (base64Content) {
-                contentElement.innerHTML = base64DecodeUtf8(base64Content);
-            } else {
-                const exampleUrl = `${window.location.origin}${window.location.pathname}?title=Custom%20title&content=Q3VzdG9tIDxiPmNvbnRlbnQ8L2I+`;
-                contentElement.innerHTML = 'No content provided. Click here for an example: <a href="' + exampleUrl + '">' + exampleUrl + '</a>';
-            }
+    // Extract and set the 'title' parameter as the page title if it exists.
+    const pageTitle = getDecodedUrlParameter('title', false);
+    if (pageTitle) {
+        document.title = pageTitle;
+    }
+}
 
-            // Extract 'title' parameter and set it as the page title
-            const pageTitle = urlParams.get('title');
-            if (pageTitle) {
-                document.title = decodeURIComponent(pageTitle);
-            }
-        }
+// Retrieves and decodes a specified URL parameter.
+// 'isTitle' is a boolean indicating whether decoding is for the title (true) or content (false).
+function getDecodedUrlParameter(paramName, encoded = false) {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const paramValue = urlParams.get(paramName);
+    if (!paramValue) return null;
 
-        // Decode Base64 to a string correctly handling UTF-8 content
-        function base64DecodeUtf8(str) {
-            // Decode base64 to a byte array
-            const binaryString = window.atob(str);
-            const bytes = new Uint8Array(binaryString.length);
-            for (let i = 0; i < binaryString.length; i++) {
-                bytes[i] = binaryString.charCodeAt(i);
-            }
-            // Convert byte array to a UTF-8 string
-            return new TextDecoder().decode(bytes);
-        }
+    return encoded ? hex2a(paramValue) : decodeURIComponent(paramValue);
+}
 
-        // Call the function when the page loads
-        window.onload = getUrlParameters;
+// Decodes a hex string to a UTF-8 string.
+function hex2a(hexx) {
+    var hex = hexx.toString();//force conversion
+    var str = '';
+    for (var i = 0; i < hex.length; i += 2)
+        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    return str;
+}
+
+// Updates the page content with the decoded string or shows an example if no content is provided.
+function updatePageContent(decodedContent) {
+    const contentElement = document.getElementById('content');
+    if (decodedContent) {
+        contentElement.innerHTML = decodedContent;
+    } else {
+        const exampleUrl = `${window.location.origin}${window.location.pathname}?title=Custom%20title&content=48656c6c6f2c2074686973206973206578616d706c6520636f6e74656e74`;
+        contentElement.innerHTML = 'No content provided. Click here for an example: <a href="' + exampleUrl + '">' + exampleUrl + '</a>';
+    }
+}
+
+// Initialize page content update when the page loads.
+window.onload = updatePageContentFromUrlParameters;
+
     </script>
 </body>
 </html>
