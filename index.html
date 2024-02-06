@@ -20,7 +20,7 @@
                 contentElement.innerHTML = base64DecodeUtf8(base64Content);
             } else {
                 const exampleUrl = `${window.location.origin}${window.location.pathname}?title=Custom%20title&content=Q3VzdG9tIDxiPmNvbnRlbnQ8L2I+`;
-                contentElement.innerHTML = 'No content provided. <a href="' + exampleUrl + '">Click here for an example.</a>';
+                contentElement.innerHTML = 'No content provided. Click here for an example: <a href="' + exampleUrl + '">' + exampleUrl + '</a>';
             }
 
             // Extract 'title' parameter and set it as the page title
