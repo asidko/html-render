@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result page</title>
+</head>
+<body>
+    <div id="content"></div>
+    <script>
+        function getUrlParameters() {
+            // Get the query string from the URL
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+
+            // Extract 'content' parameter and decode it
+            const base64Content = urlParams.get('content');
+            if (base64Content) {
+                const decodedContent = atob(base64Content);
+                document.getElementById('content').innerText = decodedContent;
+            } else {
+                document.getElementById('content').innerText = 'No content provided.';
+            }
+
+            // Extract 'title' parameter and set it as the page title
+            const pageTitle = urlParams.get('title');
+            if (pageTitle) {
+                document.title = decodeURIComponent(pageTitle);
+            }
+        }
+
+        // Call the function when the page loads
+        window.onload = getUrlParameters;
+    </script>
+</body>
+</html>
