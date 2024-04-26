@@ -5,7 +5,7 @@ This repo provides a single-file HTML page that will render any content given to
 It can be used directly from this repo, without hosting:
 
 ```text
-https://asidko.github.io/html-render/?title=<page_title>&content=<base64_encoded_html_to_show
+https://asidko.github.io/html-render/?title=<page_title>&content=<hex_encoded_html_to_show
 ```
 
 For example, this request will create a magnet link to a torrent:
